@@ -10,7 +10,6 @@ namespace YouTubeVideoDetails
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
             using (var youtubeService = new YouTubeService(new BaseClientService.Initializer()
             {
                 ApiKey = "<your-api-key-here>",
@@ -18,20 +17,22 @@ namespace YouTubeVideoDetails
             {
                 var searchRequest = youtubeService.Videos.List("snippet");
                 searchRequest.Id = "CzvQxQYKO88";
+
                 var searchResponse = await searchRequest.ExecuteAsync();
-                var youTubeVideo = searchResponse.Items.First();
-               
-                YouTubeVideoDetails videoDetails = new YouTubeVideoDetails()
+                var youTubeVideo = searchResponse.Items.FirstOrDefault();
+                if (youTubeVideo != null)
                 {
-                    VideoId = youTubeVideo.Id,
-                    Description = youTubeVideo.Snippet.Description,
-                    Title = youTubeVideo.Snippet.Title,
-                    ChannelTitle = youTubeVideo.Snippet.ChannelTitle,
-                    PublicationDate = youTubeVideo.Snippet.PublishedAt
-                };
+                    YouTubeVideoDetails videoDetails = new YouTubeVideoDetails()
+                    {
+                        VideoId = youTubeVideo.Id,
+                        Description = youTubeVideo.Snippet.Description,
+                        Title = youTubeVideo.Snippet.Title,
+                        ChannelTitle = youTubeVideo.Snippet.ChannelTitle,
+                        PublicationDate = youTubeVideo.Snippet.PublishedAt
+                    };
 
-                Console.WriteLine(videoDetails.Description);
-
+                    Console.WriteLine(videoDetails.Description);
+                }
             }
 
         }
